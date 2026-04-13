@@ -1,6 +1,6 @@
 ---
 title: "3080 Project Part 1 - Life Expectancy"
-author: "Samai, Shlok, Misthi"
+author: "Samai Patel, Shlok Rawal, Misthi Choksi"
 date: "2026-04-12"
 output: pdf_document
 ---
