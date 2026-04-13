@@ -40,6 +40,7 @@ Also, when comparing regions, it is worth noting that there is overlap in countr
 Despite these limitations, the dataset is appropriate for this analysis because it provides a broad cross-sectional view of life expectancy across many countries, allowing for meaningful comparisons.
 
 ```{r, echo=FALSE}
+# Load full dataset and filter to 2020; rename for clarity and drop missing values
 data <- read_csv("life expectancy.csv")
 data_2020 <- data %>%
   filter(Year == 2020) %>%
@@ -49,6 +50,7 @@ kable(head(data_2020, 5), caption = "First 5 Country-Level Observations (2020)")
 ```
 
 ```{r, echo=FALSE}
+# Load regional dataset and apply same filtering and renaming as country-level data
 reg_data <- read_csv("region life expectancy.csv")
 reg_data_2020 <- reg_data %>%
   filter(Year == 2020) %>%
@@ -62,7 +64,7 @@ kable(reg_data_2020, caption = "Regional Life Expectancy Values (2020)")
 ### Numerical Statistics
 
 ```{r, echo=FALSE}
-#Five-Number Summary
+# Five-number summary plus mean, SD, and count for global life expectancy
 summary_stats <- data_2020 %>%
   summarize(
     Mean = mean(LifeExp),
@@ -75,7 +77,7 @@ summary_stats <- data_2020 %>%
 
 kable(summary_stats, caption = "Global Life Expectancy Summary Statistics (2020)")
 
-#Bottom 5 Countries
+# Identify the 5 countries/territories with the lowest life expectancy
 bottom_countries <- data_2020 %>%
   arrange(LifeExp) %>%
   slice(1:5) %>%
@@ -105,7 +107,7 @@ Looking at the bottom 5 countries is why our research question is relevant. With
 We also looked at the 5 countries/territories with the highest life expectancies for comparison. It is easy to see that there is a significant difference (20+ years) between the top 5 and bottom 5 countries/territories. It is important to note that the top 5 countries/territories are relatively small.
 
 ```{r, echo=FALSE}
-# Histogram
+# Histogram of life expectancy distribution, binwidth of 2 years
 ggplot(data_2020,aes(x =LifeExp)) +
 geom_histogram(binwidth= 2, fill ="skyblue", color= "black")+
 labs(title= "Distribution of Life Expectancy (2020)",
@@ -116,6 +118,7 @@ y = "Count")
 The histogram shows the distribution of life expectancy across countries. From the histogram, we can see that the majority of countries/territories have a life expectancy between the years of 70 and 80. This fits as both the mean and median are around 73. The distribution is also skewed left with a noticeable outlier, with a country that has a life expectancy of 50. By examining our numerical summaries, we can identify this outlier as the Central African Republic, which has a life expectancy of 50.60 years, followed by Nigeria and Chad.
 
 ```{r,echo=FALSE}
+# Boxplot to visualize spread, median, and outliers in life expectancy across countries
 ggplot(data_2020,aes(y =LifeExp)) +
 geom_boxplot(fill= "lightgreen",color ="black") +
 labs(
@@ -129,6 +132,7 @@ The boxplot highlights the spread and central tendency of life expectancy. This 
 Our findings imply that while the 75th percentile of countries/territories has reached a life expectancy of over 78 years, there is a significant gap for nations in the bottom tail of the distribution. These regional differences will be explored in our future analysis.
 
 ```{r, echo=FALSE}
+# Bar chart comparing life expectancy by world region, reordered for easier visual comparison
 ggplot(reg_data_2020, aes(x = reorder(Entity, LifeExp), y = LifeExp)) +
   geom_col(fill = "skyblue", color = "black") +
   labs(
@@ -156,3 +160,4 @@ These findings emphasize the importance of continued global efforts to improve h
 ## References
 
 1.  Our World in Data. (2020). Life Expectancy Dataset. Retrieved from <https://ourworldindata.org/life-expectancy>
+2.  Generative AI (Gemini) was used to review project rubric requirements and assist with repository setup troubleshooting.
