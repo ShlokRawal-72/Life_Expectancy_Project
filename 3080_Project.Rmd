@@ -5,7 +5,7 @@ date: "2026-04-12"
 output: pdf_document
 ---
 
-**GitHub Repository URL:** idk how to get this link
+https://github.com/ShlokRawal-72/Life_Expectancy_Project
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
