@@ -5,7 +5,7 @@ date: "2026-04-12"
 output: pdf_document
 ---
 
-https://github.com/ShlokRawal-72/Life_Expectancy_Project
+**GitHub Repository URL:** <https://github.com/ShlokRawal-72/Life_Expectancy_Project>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
@@ -16,37 +16,52 @@ library(knitr)
 ```
 
 # Introduction
-This project explores how life expectancy varies across countries and examines differences across global regions. Life expectancy is a widely used indicator of a country's overall health and development. It reflects factors such as healthcare access, economic conditions, and quality of life. Differences in life expectancy across countries can reveal global inequalities and highlight areas where improvements are needed.
 
-This project explores how life expectancy varies across countries using data from 2020. The goal is to examine the distribution of life expectancy and identify patterns, variation, and potential outliers across countries.
+This project explores how life expectancy varies across countries and territories. Life expectancy is a widely used indicator of a country's overall health and development. It reflects factors such as healthcare access, economic conditions, and quality of life. Differences in life expectancy across countries and territories can reveal global inequalities and highlight areas where improvements are needed.
 
-Research Question: Is there a significant difference in the distribution of life expectancy across different global regions as of 2020?
+This project explores how life expectancy varies across countries and territories using data from 2020. The goal is to examine the distribution of life expectancy and identify patterns, variation, and potential outliers across countries.
+
+Research Question: How does life expectancy vary across countries and regions in 2020?
 
 ## Data Summary
-The dataset used in this analysis was obtained from Our World in Data, which compiles information from sources such as the World Bank and United Nations. The dataset contains country-level data on life expectancy across multiple years. 
 
-The data represents a sample of countries globally by relying on the reports from individual nations. For this analysis, only data from the year 2020 were used. Each observation represents a single country and its corresponding life expectancy at birth, measured in years.
+The dataset used in this analysis was obtained from Our World in Data, which compiles information from sources such as the World Bank and United Nations. The dataset contains country-level data on life expectancy across multiple years.
 
-After importing the dataset into R, the data were filtered to include only observations from 2020. The life expectancy variable was converted to a numeric format to allow for statistical analysis. Missing values were removed to ensure accurate summaries and visualizations. 
+The data represents a sample of countries and territories globally by relying on the reports from individual nations. For this analysis, only data from the year 2020 were used. Each observation represents a single country or territory and its corresponding life expectancy at birth, measured in years.
+
+After importing the dataset into R, the data were filtered to include only observations from 2020. The life expectancy variable was converted to a numeric format to allow for statistical analysis. Missing values were removed to ensure accurate summaries and visualizations.
 
 One limitation of this dataset is that it represents only a single year, which does not capture changes over time. Additionally, some countries may have missing or less reliable data, which could affect the results.
 
-Another potential issue is the fact that 2020 was a year where the COVID-19 pandemic may have impacted reporting accuracy or caused unusual dips in life expectancy.
+Another potential issue is the fact that 2020 was a year in which the COVID-19 pandemic may have impacted reporting accuracy or caused unusual dips in life expectancy.
+
+Also, when comparing regions, it is worth noting that there is overlap in countries between the Americas and Latin America and the Caribbean. We decided to keep both in the analysis, as it is still useful information to compare the two.
 
 Despite these limitations, the dataset is appropriate for this analysis because it provides a broad cross-sectional view of life expectancy across many countries, allowing for meaningful comparisons.
 
-```{r}
+```{r, echo=FALSE}
 data <- read_csv("life expectancy.csv")
 data_2020 <- data %>%
   filter(Year == 2020) %>%
   rename(LifeExp = `Life expectancy`) %>%
   filter(!is.na(LifeExp))
-names(data)
+kable(head(data_2020, 5), caption = "First 5 Country-Level Observations (2020)")
 ```
+
+```{r, echo=FALSE}
+reg_data <- read_csv("region life expectancy.csv")
+reg_data_2020 <- reg_data %>%
+  filter(Year == 2020) %>%
+  rename(LifeExp = `Life expectancy`) %>%
+  filter(!is.na(LifeExp))
+kable(reg_data_2020, caption = "Regional Life Expectancy Values (2020)")
+```
+
 ## Exploratory Analysis
+
 ### Numerical Statistics
 
-```{r}
+```{r, echo=FALSE}
 #Five-Number Summary
 summary_stats <- data_2020 %>%
   summarize(
@@ -66,19 +81,30 @@ bottom_countries <- data_2020 %>%
   slice(1:5) %>%
   select(Entity, LifeExp)
 
-kable(bottom_countries, caption = "Countries with the Lowest Life Expectancy in 2020")
+kable(bottom_countries, caption = "Countries/Territories with the Lowest Life Expectancy in 2020")
 ```
 
-The mean life expectancy across countries in 2020 was approximately 72.79 years, while the median was 73.51 years. The standard deviation was 7.15, indicating the level of variability in life expectancy across countries. We can also see a massive 35.5 year gap between the longest living and shortest living populations.
+```{r, echo = FALSE}
+#Top 5 Countries
+top_countries <- data_2020 %>%
+  arrange(desc(LifeExp)) %>%
+  slice(1:5) %>%
+  select(Entity, LifeExp)
 
-Since the median is higher than the mean, it confirms that the presence of several countries with significantly lower life expectancy pulls the average down, causing a heavy left-skew. Because of this observation, we also looked at an analysis of the 5 countries with the lowest life expectancies. 
+kable(top_countries, caption = "Countries/Territories with the Highest Life Expectancy in 2020")
+```
 
-Our "Bottom 5" analysis identifies the outliers that explains the patterns in our graphs. The Central African Republic, with a life expectancy of just 50.60 years, sits more than three standard deviations away from the mean, making it a severe outlier.
+The mean life expectancy across countries and territories in 2020 was approximately 72.79 years, while the median was 73.51 years. The standard deviation was 7.15, indicating the level of variability in life expectancy across countries and territories. We can also see a massive 35.5 year gap between the longest living and shortest living populations.
+
+Since the median is higher than the mean, it confirms that the presence of several countries or territories with significantly lower life expectancy pulls the average down, causing a heavy left-skew. Because of this observation, we also looked at an analysis of the 5 countries/territories with the lowest life expectancies.
+
+Our "Bottom 5" analysis identifies the outliers that explain the patterns in our graphs. The Central African Republic, with a life expectancy of just 50.60 years, sits more than three standard deviations away from the mean, making it a severe outlier.
 
 Looking at the bottom 5 countries is why our research question is relevant. With such a high variability, it suggests that health outcomes are not distributed randomly but are likely tied to specific regional or developmental factors that we can investigate further in Part 2.
 
+We also looked at the 5 countries/territories with the highest life expectancies for comparison. It is easy to see that there is a significant difference (20+ years) between the top 5 and bottom 5 countries/territories. It is important to note that the top 5 countries/territories are relatively small.
 
-```{r}
+```{r, echo=FALSE}
 # Histogram
 ggplot(data_2020,aes(x =LifeExp)) +
 geom_histogram(binwidth= 2, fill ="skyblue", color= "black")+
@@ -87,10 +113,9 @@ x = "Life Expectancy (years)",
 y = "Count")
 ```
 
-The histogram shows the distribution of life expectancy across countries. From the histogram, we can see that majority the countries have a life expectancy between the years of 70 and 80. This fits as both the mean and median are around 73.The distribution is also skewed left with a noticeable outlier with a country that has a life expectancy of 50. By examining our numerical summaries, we can identify this outlier as the Central African Republic, which has a life expectancy of 50.60 years, followed by Nigeria and Chad.
+The histogram shows the distribution of life expectancy across countries. From the histogram, we can see that the majority of countries/territories have a life expectancy between the years of 70 and 80. This fits as both the mean and median are around 73. The distribution is also skewed left with a noticeable outlier, with a country that has a life expectancy of 50. By examining our numerical summaries, we can identify this outlier as the Central African Republic, which has a life expectancy of 50.60 years, followed by Nigeria and Chad.
 
-
-```{r}
+```{r,echo=FALSE}
 ggplot(data_2020,aes(y =LifeExp)) +
 geom_boxplot(fill= "lightgreen",color ="black") +
 labs(
@@ -99,19 +124,35 @@ y ="Life Expectancy (years)"
 )
 ```
 
-The boxplot highlights the spread and central tendency of life expectancy. This boxplot supports what we saw with the histogram. The 25th percentile falls just outside of 70 and the 75th percentile falls just inside 80. The boxplot also shows as outlier at around 50, which
-we also concluded from looking at the histogram.
+The boxplot highlights the spread and central tendency of life expectancy. This boxplot supports what we saw with the histogram. The 25th percentile falls just outside of 70, and the 75th percentile falls just inside 80. The boxplot also shows an outlier at around 50, which we also concluded from looking at the histogram.
 
-Our findings imply that while the 75th percentile of countries have reached a life expectancy of over 78 years, there is a significant gap for nations in the bottom tail of the distribution. We will test if these regional differences are statistically significant in our future analysis. 
+Our findings imply that while the 75th percentile of countries/territories has reached a life expectancy of over 78 years, there is a significant gap for nations in the bottom tail of the distribution. These regional differences will be explored in our future analysis.
+
+```{r, echo=FALSE}
+ggplot(reg_data_2020, aes(x = reorder(Entity, LifeExp), y = LifeExp)) +
+  geom_col(fill = "skyblue", color = "black") +
+  labs(
+    title = "Life Expectancy by Region (2020)",
+    x = "Region",
+    y = "Life Expectancy (years)"
+  ) +
+  coord_flip()
+```
+
+The bar chart illustrates life expectancy across major world regions in 2020. There is clear variation between regions, with Oceania and Europe having the highest life expectancy, both approaching 80 years. The Americas and Asia follow closely behind, with values in the mid-to-high 70s. Latin America and the Caribbean and the global average, fall slightly lower. There is a noticeable drop in life expectancy for Africa, who have the lowest life expectancy at approximately 62.
+
+This pattern highlights a substantial gap between regions, particularly between Africa and the higher-performing regions such as Europe and Oceania. The difference of nearly 15–20 years suggests significant global inequality in health outcomes.
 
 ## Conclusion
-The exploratory analysis shows that global life expectancy is 2020 is heavily left-skewed. This analysis demonstrates that life expectancy varies considerably across countries. While most countries have life expectancy values clustered within a relatively high range, there are notable differences that highlight global disparities in health outcomes.
 
-The presence of lower-end outliers suggests that some countries face significant challenges related to healthcare, economic development, or living conditions. 
+The exploratory analysis shows that global life expectancy in 2020 is heavily left-skewed. This analysis demonstrates that life expectancy varies considerably across countries and territories. While most countries/territories have life expectancy values clustered within a relatively high range, there are notable differences that highlight global disparities in health outcomes.
 
-These findings emphasize the importance of continued global efforts to improve health outcomes and reduce inequality across countries
+The presence of lower-end outliers suggests that some countries/territories face significant challenges related to healthcare, economic development, or living conditions.
+
+These findings emphasize the importance of continued global efforts to improve health outcomes and reduce inequality across countries and territories.
 
 \newpage
 
 ## References
-1. Our World in Data. (2020). Life Expectancy Dataset. Retrieved from https://ourworldindata.org/life-expectancy
+
+1.  Our World in Data. (2020). Life Expectancy Dataset. Retrieved from <https://ourworldindata.org/life-expectancy>
